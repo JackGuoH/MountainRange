@@ -12,4 +12,10 @@ public class TestController {
         return "Hello world";
     }
 
+
+    @GetMapping("getAAA")
+    public String testAAA(){
+        return "aaa";
+    }
+
 }
