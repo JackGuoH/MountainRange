@@ -13,8 +13,13 @@ public class TestController {
     }
 
 
-    @GetMapping("getAAA")
+    @GetMapping("/getAAA")
     public String testAAA(){
+        return "aaa";
+    }
+
+    @GetMapping("/getBBB")
+    public String testBBB(){
         return "aaa";
     }
 
