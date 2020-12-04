@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.ConsumptionDAO">
+    <resultMap id="BaseResultMap" type="com.example.demo.pojo.ConsumptionInfo">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="money" property="money"/>
+        <result column="consumption_lib_id" property="consumption_lib_id" jdbcType="INTEGER"/>
+        <result column="consumption_lib_small_id" property="consumption_lib_small_id" jdbcType="INTEGER"/>
+        <result column="consumption_time" property="consumption_time" jdbcType="DATE"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="user_id" property="user_id" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,money,consumption_lib_id,consumption_lib_small_id,consumption_time,remarks,user_id
+    </sql>
+
+    <insert id="add" parameterType="com.example.demo.pojo.ConsumptionInfo">
+        INSERT INTO consumption_info(
+            id,
+            money,
+            consumption_lib_id ,
+            consumption_lib_small_id,
+            consumption_time ,
+            remarks,user_id
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+        (
+            #{item.id},
+            #{item.money},
+            #{item.consumption_lib_id},
+            #{item.consumption_lib_small_id},
+            #{item.consumption_time},
+            #{item.remarks},
+            #{item.user_id}
+        )
+        </foreach>
+    </insert>
+
+
+    <select id="getDayConsumptionInfo" parameterType="java.lang.String" resultType="com.example.demo.pojo.ConsumptionInfo">
+        SELECT
+	    *
+        FROM
+	    ( SELECT *, DATE_FORMAT( consumption_time, "%Y-%m-%d" ) AS time FROM consumption_info ) s
+        WHERE
+	    s.time = #{dayTime} and s.user_id = #{user_id}
+	    ORDER BY
+	    s.consumption_time
+	    ASC
+    </select>
+
+
+    <select id="getAllConsumptionInfo" parameterType="java.lang.String" resultType="com.example.demo.pojo.ConsumptionInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        consumption_info
+        WHERE
+        user_id = #{user_id}
+        ORDER BY
+        consumption_time
+        ASC
+    </select>
+
+    <delete id="delConsumption" parameterType="java.lang.String">
+        DELETE
+        FROM
+        consumption_info
+        where
+        user_id = #{user_id}
+        AND
+        id = #{consumptionInfoId}
+    </delete>
+</mapper>
